@@ -1,16 +1,17 @@
+import { EditorControls } from "@/components/EditorControls";
+import { SidebarProvider } from "@/ui/sidebar";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const satoshi = localFont({
+  src: [
+    { path: "./fonts/Satoshi-Black.ttf", weight: "800" },
+    { path: "./fonts/Satoshi-Bold.ttf", weight: "700" },
+    { path: "./fonts/Satoshi-Medium.ttf", weight: "500" },
+    { path: "./fonts/Satoshi-Regular.ttf", weight: "400" },
+  ],
+  variable: "--font-satoshi",
 });
 
 export const metadata: Metadata = {
@@ -25,10 +26,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${satoshi.variable} font-main antialiased`}>
+        <SidebarProvider>
+          <EditorControls />
+          <main className="h-screen w-full">{children}</main>
+        </SidebarProvider>
       </body>
     </html>
   );
