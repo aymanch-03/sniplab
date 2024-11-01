@@ -18,12 +18,18 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { LANGUAGES } from "@/lib/languages";
+import { useControlsStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
 export function LanguageSelect() {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(LANGUAGES["typescript"].name);
+  const language = useControlsStore((state) => state.language);
+  const setValue = useControlsStore((state) => state.setLanguage);
+
+  React.useEffect(() => {
+    console.log(language);
+  }, [language]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -39,9 +45,10 @@ export function LanguageSelect() {
             aria-expanded={open}
             className="w-full justify-between"
           >
-            {value
-              ? Object.values(LANGUAGES).find((lang) => lang.name === value)
-                  ?.name
+            {language
+              ? Object.values(LANGUAGES).find(
+                  (lang) => lang.name === language.name,
+                )?.name
               : "Select language..."}
             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -57,7 +64,8 @@ export function LanguageSelect() {
                     key={lang.name}
                     value={lang.name}
                     onSelect={(currentValue) => {
-                      setValue(currentValue === value ? "" : currentValue);
+                      console.log(currentValue);
+                      setValue(currentValue);
                       setOpen(false);
                     }}
                   >
@@ -65,7 +73,9 @@ export function LanguageSelect() {
                     <CheckIcon
                       className={cn(
                         "ml-auto h-4 w-4",
-                        value === lang.name ? "opacity-100" : "opacity-0",
+                        language?.name === lang.name
+                          ? "opacity-100"
+                          : "opacity-0",
                       )}
                     />
                   </CommandItem>

@@ -26,10 +26,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${satoshi.variable} font-main antialiased`}>
+      <body
+        className={`${satoshi.variable} overflow-x-hidden font-main antialiased`}
+      >
         <SidebarProvider>
           <EditorControls />
-          <main className="h-screen w-full">{children}</main>
+          <main className="flex h-screen w-full flex-col">{children}</main>
         </SidebarProvider>
       </body>
     </html>

@@ -1,11 +1,11 @@
 "use client";
 import { ExportState, useDownloadPNG } from "@/hooks/useDownloadPNG";
+import { useControlsStore } from "@/lib/store";
 import { Button } from "@/ui/button";
 import { Download, Loader2 } from "lucide-react";
 
 const ExportButton: React.FC = () => {
   const { downloadPNG, exportState } = useDownloadPNG();
-
   return (
     <Button
       onClick={downloadPNG}

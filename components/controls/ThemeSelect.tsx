@@ -20,13 +20,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useControlsStore } from "@/lib/store";
 import { themeNames } from "@/lib/themes";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
 export function ThemeSelect() {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(themeNames[0].name);
+  const themeName = useControlsStore((state) => state.theme);
+  const setValue = useControlsStore((state) => state.setTheme);
 
   return (
     <div className="flex flex-col gap-1">
@@ -42,8 +44,8 @@ export function ThemeSelect() {
             aria-expanded={open}
             className="w-full justify-between"
           >
-            {value
-              ? themeNames.find((theme) => theme.name === value)?.name
+            {themeName
+              ? themeNames.find((theme) => theme.name === themeName)?.name
               : "Select theme..."}
             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -59,7 +61,7 @@ export function ThemeSelect() {
                     key={theme.name}
                     value={theme.name}
                     onSelect={(currentValue) => {
-                      setValue(currentValue === value ? "" : currentValue);
+                      setValue(currentValue);
                       setOpen(false);
                     }}
                   >
@@ -67,7 +69,7 @@ export function ThemeSelect() {
                     <CheckIcon
                       className={cn(
                         "ml-auto h-4 w-4",
-                        value === theme.name ? "opacity-100" : "opacity-0",
+                        themeName === theme.name ? "opacity-100" : "opacity-0",
                       )}
                     />
                   </CommandItem>
