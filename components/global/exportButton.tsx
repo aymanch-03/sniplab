@@ -6,6 +6,7 @@ import { Download, Loader2 } from "lucide-react";
 
 const ExportButton: React.FC = () => {
   const { downloadPNG, exportState } = useDownloadPNG();
+
   return (
     <Button
       onClick={downloadPNG}

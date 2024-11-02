@@ -79,3 +79,7 @@ body {
 *::after {
   border: 1px solid lime;
 } */
+
+[data-editor-frame] pre {
+  white-space: pre-wrap;
+}

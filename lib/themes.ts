@@ -215,7 +215,7 @@ export const themeLabels = {
   regexp: "RegExp",
 };
 
-export const allThemes = [...chalkistThemes, ...portedThemes, ...shikiThemes];
+export const allThemes = [...chalkistThemes, ...portedThemes];
 
 export function getThemeColors(themeName: string) {
   const theme = allThemes.find((theme) => theme.displayName === themeName);

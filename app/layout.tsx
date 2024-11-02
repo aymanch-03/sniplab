@@ -1,4 +1,5 @@
 import { EditorControls } from "@/components/EditorControls";
+import { Toast, ToastProvider } from "@/components/ui/toast";
 import { SidebarProvider } from "@/ui/sidebar";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -29,10 +30,13 @@ export default function RootLayout({
       <body
         className={`${satoshi.variable} overflow-x-hidden font-main antialiased`}
       >
-        <SidebarProvider>
-          <EditorControls />
-          <main className="flex h-screen w-full flex-col">{children}</main>
-        </SidebarProvider>
+        <ToastProvider>
+          <SidebarProvider>
+            <EditorControls />
+            <main className="flex h-screen w-full flex-col">{children}</main>
+          </SidebarProvider>
+          <Toast />
+        </ToastProvider>
       </body>
     </html>
   );

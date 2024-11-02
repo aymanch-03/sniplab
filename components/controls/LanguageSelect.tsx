@@ -27,10 +27,6 @@ export function LanguageSelect() {
   const language = useControlsStore((state) => state.language);
   const setValue = useControlsStore((state) => state.setLanguage);
 
-  React.useEffect(() => {
-    console.log(language);
-  }, [language]);
-
   return (
     <div className="flex flex-col gap-2">
       <legend className="flex items-center gap-1.5 pl-1 text-sm font-medium">
@@ -45,11 +41,7 @@ export function LanguageSelect() {
             aria-expanded={open}
             className="w-full justify-between"
           >
-            {language
-              ? Object.values(LANGUAGES).find(
-                  (lang) => lang.name === language.name,
-                )?.name
-              : "Select language..."}
+            {language.name}
             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -64,8 +56,12 @@ export function LanguageSelect() {
                     key={lang.name}
                     value={lang.name}
                     onSelect={(currentValue) => {
-                      console.log(currentValue);
-                      setValue(currentValue);
+                      console.log("Current value: ", currentValue);
+                      setValue(
+                        Object.values(LANGUAGES).find(
+                          (l) => l.name === currentValue,
+                        )!,
+                      );
                       setOpen(false);
                     }}
                   >

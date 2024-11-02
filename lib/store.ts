@@ -10,15 +10,15 @@ type ControlsStore = {
   theme: string;
   fileName: string;
   highlighter: Highlighter | null;
-  setLanguage: (language: string) => void;
+  setLanguage: (language: Language) => void;
   setPadding: (padding: number) => void;
   setTheme: (themeName: string) => void;
   setFileName: (fileName: string) => void;
 };
 
 export const useControlsStore = create<ControlsStore>()((set) => ({
-  language: LANGUAGES["shell"],
-  setLanguage: (language) => set({ language: LANGUAGES[language] }),
+  language: LANGUAGES["typescript"],
+  setLanguage: (language: Language) => set({ language }),
   padding: PADDING_OPTIONS[4].value,
   setPadding: (padding: number) => set({ padding }),
   theme: themeNames[0].name,

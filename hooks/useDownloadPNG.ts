@@ -1,5 +1,4 @@
 "use client";
-import { useControlsStore } from "@/lib/store";
 import { domToBlob } from "modern-screenshot";
 import { useCallback, useEffect, useRef, useState } from "react";
 
