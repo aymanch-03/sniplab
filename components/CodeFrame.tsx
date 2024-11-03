@@ -1,62 +1,46 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { useHighlightCode } from "@/hooks/useHighlightCode";
 import {
   handleBracketClose,
   handleEnter,
   handleTab,
 } from "@/lib/editorHelpers";
-import formatCode from "@/lib/formatCode";
 import { useControlsStore } from "@/lib/store";
-import { allThemes } from "@/lib/themes";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { codeToHtml } from "shiki";
+import React, { useCallback, useEffect, useRef } from "react";
 import EditorFrame from "./EditorFrame";
 import ResizableFrame from "./ResizableFrame";
 
 export const CodeFrame = () => {
-  const { toast } = useToast();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [code, setCode] = useState("");
-  const [highlightedHtml, setHighlightedHtml] = useState("");
-  const { language, theme } = useControlsStore();
-  const [formatting, setFormatting] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const highlightedDivRef = useRef<HTMLDivElement>(null);
+  const code = useControlsStore((state) => state.code);
+  const setCode = useControlsStore((state) => state.setCode);
+  const formatting = useControlsStore((state) => state.formatting);
+  const { highlightedHtml, highlightCode } = useHighlightCode();
 
-  const highlightCode = useCallback(
-    async (codeToHighlight: string) => {
-      if (!codeToHighlight) return;
-
-      try {
-        setIsProcessing(true);
-        const html = await codeToHtml(codeToHighlight, {
-          lang: language.value,
-          theme: allThemes.find((t) => t.displayName === theme)!,
-        });
-        setHighlightedHtml(html);
-      } catch (error) {
-        console.error("Error highlighting code: ", error);
-      } finally {
-        setIsProcessing(false);
-      }
-    },
-    [language, theme],
-  );
-
-  const handleChange = useCallback(
-    async (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const newCode = event.target.value;
-      setCode(newCode);
-      await highlightCode(newCode);
-    },
-    [highlightCode],
-  );
+  const handleChange = async (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const newCode = event.target.value;
+    setCode(newCode);
+    await highlightCode(newCode);
+  };
 
   const adjustHeight = useCallback(() => {
     const textarea = textareaRef.current;
-    if (textarea) {
+    const highlightedDiv = highlightedDivRef.current;
+
+    if (textarea && highlightedDiv) {
       textarea.style.height = "auto";
-      textarea.style.height = `${textarea.scrollHeight}px`;
+      highlightedDiv.style.height = "auto";
+
+      const maxHeight = Math.max(
+        textarea.scrollHeight,
+        highlightedDiv.scrollHeight,
+      );
+
+      textarea.style.height = `${maxHeight}px`;
+      highlightedDiv.style.height = `${maxHeight}px`;
     }
   }, []);
 
@@ -64,31 +48,7 @@ export const CodeFrame = () => {
     adjustHeight();
     window.addEventListener("resize", adjustHeight);
     return () => window.removeEventListener("resize", adjustHeight);
-  }, [code, adjustHeight]);
-
-  const handleFormat = async () => {
-    if (formatting || !code.trim()) return;
-    try {
-      setFormatting(true);
-      const formattedCode = await formatCode(code, language);
-      console.log(formattedCode);
-      setCode(formattedCode);
-
-      // Automatically highlight the formatted code
-      await highlightCode(formattedCode);
-
-      toast({
-        title: "Code formatted successfully",
-      });
-    } catch (error) {
-      toast({
-        title: "Error formatting code",
-        description: "Please try again or check your code syntax",
-      });
-    } finally {
-      setFormatting(false);
-    }
-  };
+  }, [code, adjustHeight, formatting]);
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -105,30 +65,27 @@ export const CodeFrame = () => {
         handleBracketClose(textarea);
       }
 
-      // Update code state after any of these operations
       setCode(textarea.value);
     },
-    [], // No dependencies needed since we're using the event.currentTarget
+    [],
   );
+
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
 
   return (
     <section className="mx-auto flex w-full flex-1 items-center justify-center overflow-x-auto p-4">
-      <Button
-        onClick={handleFormat}
-        disabled={formatting || !code.trim() || isProcessing}
-        className="mr-4"
-      >
-        {formatting ? "Formatting..." : "Format code"}
-      </Button>
       <ResizableFrame>
-        <EditorFrame className="relative">
+        <EditorFrame className="no-scrollbar relative">
           <div
-            className="absolute top-11 z-0 w-full whitespace-pre-wrap bg-transparent font-mono text-sm leading-7 [&pre]:bg-transparent"
+            ref={highlightedDivRef}
+            className="no-scrollbar absolute top-11 z-0 w-full max-w-full whitespace-pre-wrap bg-transparent p-3 pt-0 font-mono text-sm leading-7 [&pre]:bg-transparent"
             dangerouslySetInnerHTML={{ __html: highlightedHtml }}
           />
           <textarea
             name="code"
-            className="relative z-[2] min-h-[60px] w-full select-none resize-none border-none bg-transparent font-mono text-sm leading-7 text-transparent caret-white focus:outline-none focus:ring-0"
+            className="no-scrollbar relative z-[2] min-h-[60px] w-[-webkit-fill-available] select-none resize-none border-none bg-transparent px-3 pb-3 font-mono text-sm leading-7 text-transparent caret-white focus:outline-none focus:ring-0"
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             ref={textareaRef}

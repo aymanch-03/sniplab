@@ -34,8 +34,8 @@ export default function RootLayout({
           <SidebarProvider>
             <EditorControls />
             <main className="flex h-screen w-full flex-col">{children}</main>
+            <Toast />
           </SidebarProvider>
-          <Toast />
         </ToastProvider>
       </body>
     </html>

@@ -29,12 +29,9 @@ export function getCurrentlySelectedLine(textarea: HTMLTextAreaElement) {
 
 export function handleTab(textarea: HTMLTextAreaElement, shiftKey: boolean) {
   const original = textarea.value;
-
   const start = textarea.selectionStart;
   const end = textarea.selectionEnd;
-
   const beforeStart = original.slice(0, start);
-
   const currentLine = getCurrentlySelectedLine(textarea);
 
   if (start === end) {
@@ -42,41 +39,65 @@ export function handleTab(textarea: HTMLTextAreaElement, shiftKey: boolean) {
     if (shiftKey) {
       // dedent
       const newStart = beforeStart.lastIndexOf("\n") + 1;
-      textarea.setSelectionRange(newStart, end);
-      document.execCommand(
-        "insertText",
-        false,
-        dedentText(original.slice(newStart, end)),
-      );
+      const beforeText = original.slice(0, newStart);
+      const afterText = original.slice(end);
+      const modifiedText = dedentText(original.slice(newStart, end));
+
+      textarea.value = beforeText + modifiedText + afterText;
+      textarea.selectionStart = textarea.selectionEnd =
+        newStart + modifiedText.length;
     } else {
       // indent
-      document.execCommand("insertText", false, "  ");
+      const beforeText = original.slice(0, start);
+      const afterText = original.slice(end);
+
+      textarea.value = beforeText + "  " + afterText;
+      textarea.selectionStart = textarea.selectionEnd = start + 2;
     }
   } else {
     // Text selected
     const newStart = beforeStart.lastIndexOf("\n") + 1 || 0;
-    textarea.setSelectionRange(newStart, end);
+    let newSelectionStart: number;
+    let newSelectionEnd: number;
 
     if (shiftKey) {
       // dedent
+      const beforeText = original.slice(0, newStart);
+      const afterText = original.slice(end);
       const newText = dedentText(original.slice(newStart, end));
-      document.execCommand("insertText", false, newText);
+
+      textarea.value = beforeText + newText + afterText;
 
       if (currentLine.startsWith("  ")) {
-        textarea.setSelectionRange(start - 2, start - 2 + newText.length);
+        newSelectionStart = start - 2;
+        newSelectionEnd = start - 2 + newText.length;
       } else {
-        textarea.setSelectionRange(start, start + newText.length);
+        newSelectionStart = start;
+        newSelectionEnd = start + newText.length;
       }
     } else {
       // indent
+      const beforeText = original.slice(0, newStart);
+      const afterText = original.slice(end);
       const newText = indentText(original.slice(newStart, end));
-      document.execCommand("insertText", false, newText);
-      textarea.setSelectionRange(start + 2, start + 2 + newText.length);
+
+      textarea.value = beforeText + newText + afterText;
+      newSelectionStart = start + 2;
+      newSelectionEnd = start + 2 + newText.length;
     }
+
+    textarea.selectionStart = newSelectionStart;
+    textarea.selectionEnd = newSelectionEnd;
   }
+
+  // Trigger input event to notify of changes
+  textarea.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 export function handleEnter(textarea: HTMLTextAreaElement) {
+  const original = textarea.value;
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
   const currentLine = getCurrentlySelectedLine(textarea);
 
   const currentIndentationMatch = currentLine.match(/^(\s+)/);
@@ -88,16 +109,38 @@ export function handleEnter(textarea: HTMLTextAreaElement) {
     wantedIndentation += "  ";
   }
 
-  document.execCommand("insertText", false, `\n${wantedIndentation}`);
+  const beforeText = original.slice(0, start);
+  const afterText = original.slice(end);
+  const insertText = `\n${wantedIndentation}`;
+
+  textarea.value = beforeText + insertText + afterText;
+  textarea.selectionStart = textarea.selectionEnd = start + insertText.length;
+
+  // Trigger input event
+  textarea.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 export function handleBracketClose(textarea: HTMLTextAreaElement) {
-  const currentLine = getCurrentlySelectedLine(textarea);
+  const original = textarea.value;
   const { selectionStart, selectionEnd } = textarea;
+  const currentLine = getCurrentlySelectedLine(textarea);
 
   if (selectionStart === selectionEnd && currentLine.match(/^\s{2,}$/)) {
-    textarea.setSelectionRange(selectionStart - 2, selectionEnd);
+    // Remove extra indentation
+    const beforeText = original.slice(0, selectionStart - 2);
+    const afterText = original.slice(selectionEnd);
+
+    textarea.value = beforeText + "}" + afterText;
+    textarea.selectionStart = textarea.selectionEnd = selectionStart - 2 + 1;
+  } else {
+    // Normal bracket close
+    const beforeText = original.slice(0, selectionStart);
+    const afterText = original.slice(selectionEnd);
+
+    textarea.value = beforeText + "}" + afterText;
+    textarea.selectionStart = textarea.selectionEnd = selectionStart + 1;
   }
 
-  document.execCommand("insertText", false, "}");
+  // Trigger input event
+  textarea.dispatchEvent(new Event("input", { bubbles: true }));
 }

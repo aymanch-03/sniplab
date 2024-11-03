@@ -9,21 +9,29 @@ type ControlsStore = {
   padding: number;
   theme: string;
   fileName: string;
+  code: string;
   highlighter: Highlighter | null;
+  formatting: boolean;
   setLanguage: (language: Language) => void;
   setPadding: (padding: number) => void;
   setTheme: (themeName: string) => void;
   setFileName: (fileName: string) => void;
+  setCode: (code: string) => void;
+  setFormatting: (formatting: boolean) => void;
 };
 
 export const useControlsStore = create<ControlsStore>()((set) => ({
   language: LANGUAGES["typescript"],
-  setLanguage: (language: Language) => set({ language }),
   padding: PADDING_OPTIONS[4].value,
-  setPadding: (padding: number) => set({ padding }),
   theme: themeNames[0].name,
-  setTheme: (themeName: string) => set({ theme: themeName }),
   fileName: "example.tsx",
-  setFileName: (fileName: string) => set({ fileName }),
   highlighter: null,
+  code: "",
+  formatting: false,
+  setLanguage: (language: Language) => set({ language }),
+  setPadding: (padding: number) => set({ padding }),
+  setTheme: (themeName: string) => set({ theme: themeName }),
+  setFileName: (fileName: string) => set({ fileName }),
+  setCode: (code: string) => set({ code }),
+  setFormatting: (formatting: boolean) => set({ formatting }),
 }));

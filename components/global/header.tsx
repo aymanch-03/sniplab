@@ -3,7 +3,7 @@ import ExportButton from "@/components/global/exportButton";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "@/ui/sidebar";
 import { SidebarTrigger } from "@/ui/sidebar-trigger";
-import { useEffect } from "react";
+import { FormatButton } from "./formatButton";
 
 export const Header = () => {
   const { toggleSidebar, isMobile } = useSidebar();
@@ -17,7 +17,10 @@ export const Header = () => {
         )}
       >
         {isMobile && <SidebarTrigger toggleSidebar={toggleSidebar} />}
-        <ExportButton />
+        <div className="flex items-center justify-end gap-3">
+          <FormatButton />
+          <ExportButton />
+        </div>
       </div>
     </header>
   );

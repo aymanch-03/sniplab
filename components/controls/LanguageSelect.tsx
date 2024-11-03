@@ -56,7 +56,6 @@ export function LanguageSelect() {
                     key={lang.name}
                     value={lang.name}
                     onSelect={(currentValue) => {
-                      console.log("Current value: ", currentValue);
                       setValue(
                         Object.values(LANGUAGES).find(
                           (l) => l.name === currentValue,

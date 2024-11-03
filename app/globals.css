@@ -74,12 +74,21 @@ body {
   background: #555;
 }
 
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
 /* *,
 *::before,
 *::after {
-  border: 1px solid lime;
+  outline: 1px solid lime;
 } */
 
-[data-editor-frame] pre {
+pre {
   white-space: pre-wrap;
+  width: inherit;
 }
