@@ -45,7 +45,7 @@ export function LanguageSelect() {
             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[206px] p-0">
+        <PopoverContent className="w-[238px] p-0">
           <Command className="bg-background">
             <CommandInput placeholder="Search language..." className="h-9" />
             <CommandList>

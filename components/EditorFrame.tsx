@@ -18,6 +18,8 @@ const EditorFrame = (props: PropsWithChildren & { className?: string }) => {
           <div className="h-3 w-3 rounded-full bg-[#00c94d]"></div>
         </div>
         <input
+          spellCheck="false"
+          autoCapitalize="off"
           defaultValue={fileName}
           placeholder="example.tsx"
           className="size-fit justify-self-center border-0 border-none bg-transparent p-0 text-center text-sm font-medium shadow-none outline-none focus:outline-none focus:ring-0 focus:placeholder:text-transparent"

@@ -6,11 +6,12 @@ interface ResizableFrameProps {
   children: ReactNode;
 }
 const MIN_WIDTH = 520;
-const MAX_WIDTH = 900;
+const MAX_WIDTH = 1000;
 
 const ResizableFrame: React.FC<ResizableFrameProps> = ({ children }) => {
-  const [width, setWidth] = useState(MIN_WIDTH);
+  const [width, setWidth] = useState((MIN_WIDTH + MAX_WIDTH) / 2);
   const padding = useControlsStore((state) => state.padding);
+  const background = useControlsStore((state) => state.background);
   const centeredPositionX = `calc(50% - ${width / 2}px)`;
 
   const handleResize: RndResizeCallback = (
@@ -25,7 +26,7 @@ const ResizableFrame: React.FC<ResizableFrameProps> = ({ children }) => {
 
   return (
     <Rnd
-      data-editor-frame
+      data-code-frame
       size={{ width, height: "auto" }}
       position={{ x: parseFloat(centeredPositionX), y: 0 }}
       bounds="parent"
@@ -48,8 +49,19 @@ const ResizableFrame: React.FC<ResizableFrameProps> = ({ children }) => {
         padding: padding + "px",
         height: "fit-content",
       }}
-      className="border bg-background bg-gradient-to-br from-[#a68efb] to-[#e9bff8] transition-[padding] duration-300 max-sm:scale-75"
+      className="!shrink overflow-hidden outline outline-1 outline-border transition-[padding] duration-300 max-sm:scale-75"
     >
+      <div
+        className="absolute inset-0 -z-10 size-full"
+        style={{
+          filter: background.backgroundStyle.filter,
+          transform: background.backgroundStyle.transform,
+          background:
+            background.id === "transparent"
+              ? "none"
+              : background.backgroundStyle.background,
+        }}
+      />
       {children}
     </Rnd>
   );

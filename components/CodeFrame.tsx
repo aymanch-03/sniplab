@@ -5,6 +5,8 @@ import {
   handleEnter,
   handleTab,
 } from "@/lib/editorHelpers";
+import formatCode from "@/lib/formatCode";
+import { LANGUAGES } from "@/lib/languages";
 import { useControlsStore } from "@/lib/store";
 import React, { useCallback, useEffect, useRef } from "react";
 import EditorFrame from "./EditorFrame";
@@ -72,10 +74,18 @@ export const CodeFrame = () => {
 
   useEffect(() => {
     textareaRef.current?.focus();
+    if (!code.trim()) {
+      setCode(`interface CodeSnippetProps { 
+  title: string; 
+  language: string; 
+  code: string; 
+  description?: string;
+}`);
+    }
   }, []);
 
   return (
-    <section className="mx-auto flex w-full flex-1 items-center justify-center overflow-x-auto p-4">
+    <section className="mx-auto flex w-full flex-1 items-center justify-center overflow-hidden p-4 md:overflow-auto">
       <ResizableFrame>
         <EditorFrame className="no-scrollbar relative">
           <div

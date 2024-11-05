@@ -9,7 +9,7 @@ export const Header = () => {
   const { toggleSidebar, isMobile } = useSidebar();
 
   return (
-    <header className="border-b">
+    <header className="sticky top-0 z-30 border-b bg-background/30 backdrop-blur">
       <div
         className={cn(
           "container mx-auto flex items-center justify-between px-4 py-2.5",

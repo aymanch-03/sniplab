@@ -13,7 +13,7 @@ export function useDownloadPNG() {
   const timeoutRef = useRef<NodeJS.Timeout>();
 
   const downloadPNG = useCallback(async () => {
-    const frame = document.querySelector<HTMLDivElement>("[data-editor-frame]");
+    const frame = document.querySelector<HTMLDivElement>("[data-code-frame]");
     if (!frame) {
       console.error("No editor frame found");
       return;
