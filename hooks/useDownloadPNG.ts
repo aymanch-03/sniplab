@@ -36,7 +36,7 @@ export function useDownloadPNG() {
       }
 
       const url = URL.createObjectURL(blob);
-      console.log(url);
+
       const link = document.createElement("a");
       link.href = url;
       link.download = "snippet.png";

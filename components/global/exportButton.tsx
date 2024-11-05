@@ -1,11 +1,12 @@
 "use client";
 import { ExportState, useDownloadPNG } from "@/hooks/useDownloadPNG";
+import { useIsMobile } from "@/hooks/useMobile";
 import { Button } from "@/ui/button";
 import { Download, Loader2 } from "lucide-react";
 
 const ExportButton: React.FC = () => {
   const { downloadPNG, exportState } = useDownloadPNG();
-
+  const isMobile = useIsMobile();
   return (
     <Button
       onClick={downloadPNG}
@@ -17,13 +18,15 @@ const ExportButton: React.FC = () => {
       ) : (
         <Download size={16} />
       )}
-      <span>
-        {exportState === ExportState.PreparingToDownload
-          ? "Downloading..."
-          : exportState === ExportState.JustDownloaded
-            ? "Downloaded"
-            : "Download PNG"}
-      </span>
+      {isMobile ? null : (
+        <span>
+          {exportState === ExportState.PreparingToDownload
+            ? "Downloading..."
+            : exportState === ExportState.JustDownloaded
+              ? "Downloaded"
+              : "Download PNG"}
+        </span>
+      )}
     </Button>
   );
 };

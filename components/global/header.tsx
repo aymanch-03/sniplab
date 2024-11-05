@@ -3,6 +3,7 @@ import ExportButton from "@/components/global/exportButton";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "@/ui/sidebar";
 import { SidebarTrigger } from "@/ui/sidebar-trigger";
+import { Github } from "lucide-react";
 import { FormatButton } from "./formatButton";
 
 export const Header = () => {

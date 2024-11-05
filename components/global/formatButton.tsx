@@ -1,3 +1,4 @@
+import { useIsMobile } from "@/hooks/useMobile";
 import formatCode, { formatterSupportedLanguages } from "@/lib/formatCode";
 import { useControlsStore } from "@/lib/store";
 import { Button } from "@/ui/button";
@@ -8,6 +9,7 @@ import { toast } from "sonner";
 import { useShallow } from "zustand/shallow";
 
 export const FormatButton = () => {
+  const isMobile = useIsMobile();
   const {
     code,
     language: selectedLanguage,
@@ -83,7 +85,9 @@ export const FormatButton = () => {
       ) : (
         <WandSparkles size={16} />
       )}
-      <span>{formatting ? "Formatting..." : "Format code"}</span>
+      {isMobile ? null : (
+        <span>{formatting ? "Formatting..." : "Format code"}</span>
+      )}
     </Button>
   );
 };
