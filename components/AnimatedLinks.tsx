@@ -8,7 +8,7 @@ export const AnimatedLinks = () => {
         label="Github"
         className="text-sm font-medium transition-colors duration-300 ease-out"
         icon={"/icons/github-logo.svg"}
-        href="https://github.com/aymanch-03/code-snippets"
+        href="https://github.com/aymanch-03/sniplab"
         rotate={-3}
       />
       <AnimatedTooltip
