@@ -17,8 +17,17 @@ const satoshi = localFont({
 
 export const metadata: Metadata = {
   title: "SnipLab",
-  description: "A web app for creating and sharing beautiful code snippets",
-  keywords: ["code snippets", "developer tools", "Next.js"],
+  description: "Create beautiful screenshots of your code.",
+  openGraph: {
+    description: "Create beautiful screenshots of your code.",
+  },
+  keywords: [
+    "code snippets",
+    "developer tools",
+    "Next.js",
+    "screenshot code",
+    "snippet",
+  ],
 };
 
 export default function RootLayout({
